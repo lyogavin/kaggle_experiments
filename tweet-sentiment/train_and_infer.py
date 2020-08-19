@@ -731,72 +731,72 @@ def postprocess(tweet, offsets, aa, bb, sentiment):
 # %%time
 # 
 # 
-# train_df = pd.read_csv(ROOT_PATH +  '/input/tweet-sentiment-extraction/train.csv')
-# 
-# if DEBUG_LOAD:
-#     train_df = train_df.head(n=1000)
-# train_df['text'] = train_df['text'].astype(str)
-# train_df['selected_text'] = train_df['selected_text'].astype(str)
-# 
-# jc_sum = []
-# 
-# for fold, (train_idx, val_idx) in enumerate(skf.split(train_df, train_df.sentiment), start=1): 
-#     print(f'Fold: {fold}')
-# 
-#     if TRAIN_WITH_PSUEDO_LABELS:
-#           pl_df= pd.read_csv("psuedo_labels_fold_%d.csv" % fold)
-#           if DEBUG_LOAD:
-#               pl_df = pl_df.head(n=1000)
-#           pl_df['text'] = pl_df['text'].astype(str)
-#           pl_df['selected_text'] = pl_df['selected_text'].astype(str)
-#           #del pl_df['score']
-#           train_df = train_df.append(pl_df)
-# 
-#     
-#     if DEBUG_FOLD:
-#         if fold != 1:
-#             print(f"DEBUG skip fold:{fold}")
-#             continue
-# 
-#     model = TweetModel()
-# 
-#     prefix = "roberta"
-#     def is_backbone(n):
-#         return prefix in n
-# 
-#     lr=3e-5
-# 
-# 
-# 
-# 
-#     if USE_MULTIPLE_LEARNING_RATE:
-#       params = list(model.named_parameters())
-# 
-#       optimizer_grouped_parameters = [
-#           {"params": [p for n, p in params if is_backbone(n)], "lr": lr},
-#           {"params": [p for n, p in params if not is_backbone(n)], "lr": lr * USE_MULTIPLE_LEARNING_RATE_TIMES},
-#       ]
-# 
-#       optimizer = torch.optim.AdamW(
-#         optimizer_grouped_parameters, lr=lr, betas=(0.9, 0.999)
-#       )
-#     else:
-#       optimizer = optim.AdamW(model.parameters(), lr=lr, betas=(0.9, 0.999))
-# 
-#     criterion = loss_fn    
-#     dataloaders_dict = get_train_val_loaders(train_df, train_idx, val_idx, batch_size)
-# 
-#     jc = train_model(
-#         model, 
-#         dataloaders_dict,
-#         criterion, 
-#         optimizer, 
-#         num_epochs,
-#         f'roberta_fold{fold}.pth')
-#     
-#     jc_sum.append(jc)
-# 
-# print("average jaccard: {:.4f}".format(sum(jc_sum)/len(jc_sum)))
+train_df = pd.read_csv(ROOT_PATH +  '/input/tweet-sentiment-extraction/train.csv')
+
+if DEBUG_LOAD:
+    train_df = train_df.head(n=1000)
+train_df['text'] = train_df['text'].astype(str)
+train_df['selected_text'] = train_df['selected_text'].astype(str)
+
+jc_sum = []
+
+for fold, (train_idx, val_idx) in enumerate(skf.split(train_df, train_df.sentiment), start=1):
+    print(f'Fold: {fold}')
+
+    if TRAIN_WITH_PSUEDO_LABELS:
+          pl_df= pd.read_csv("psuedo_labels_fold_%d.csv" % fold)
+          if DEBUG_LOAD:
+              pl_df = pl_df.head(n=1000)
+          pl_df['text'] = pl_df['text'].astype(str)
+          pl_df['selected_text'] = pl_df['selected_text'].astype(str)
+          #del pl_df['score']
+          train_df = train_df.append(pl_df)
+
+
+    if DEBUG_FOLD:
+        if fold != 1:
+            print(f"DEBUG skip fold:{fold}")
+            continue
+
+    model = TweetModel()
+
+    prefix = "roberta"
+    def is_backbone(n):
+        return prefix in n
+
+    lr=3e-5
+
+
+
+
+    if USE_MULTIPLE_LEARNING_RATE:
+      params = list(model.named_parameters())
+
+      optimizer_grouped_parameters = [
+          {"params": [p for n, p in params if is_backbone(n)], "lr": lr},
+          {"params": [p for n, p in params if not is_backbone(n)], "lr": lr * USE_MULTIPLE_LEARNING_RATE_TIMES},
+      ]
+
+      optimizer = torch.optim.AdamW(
+        optimizer_grouped_parameters, lr=lr, betas=(0.9, 0.999)
+      )
+    else:
+      optimizer = optim.AdamW(model.parameters(), lr=lr, betas=(0.9, 0.999))
+
+    criterion = loss_fn    
+    dataloaders_dict = get_train_val_loaders(train_df, train_idx, val_idx, batch_size)
+
+    jc = train_model(
+        model,
+        dataloaders_dict,
+        criterion,
+        optimizer,
+        num_epochs,
+        f'roberta_fold{fold}.pth')
+
+    jc_sum.append(jc)
+
+print("average jaccard: {:.4f}".format(sum(jc_sum)/len(jc_sum)))
 
 
 
