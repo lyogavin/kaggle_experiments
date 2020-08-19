@@ -12,7 +12,7 @@ Original file is located at
 #from google.colab import drive
 #drive.mount('/content/drive')
 
-#ROOT_PATH="/content/drive/My Drive/kaggle"
+ROOT_PATH="/home/pi/kaggle_tweet_sentiment/kaggle"
 
 # Flags:
 FOLD_COUNT = 5
@@ -20,7 +20,7 @@ FOLD_COUNT = 5
 
 DEBUG_LOAD = False
 DEBUG_FOLD = False
-USE_MULTI_SAMPLE_DROPOUT = True #https://github.com/oleg-yaroshevskiy/quest_qa_labeling/blob/master/step5_model3_roberta_code/model.py#L119
+USE_MULTI_SAMPLE_DROPOUT = False #https://github.com/oleg-yaroshevskiy/quest_qa_labeling/blob/master/step5_model3_roberta_code/model.py#L119
 USE_MULTI_SAMPLE_DROPOUT_RATE = 0.2
 USE_MULTI_SAMPLE_DROPOUT_SAMPLE = 8
 
@@ -34,7 +34,7 @@ USE_MULTIPLE_LEARNING_RATE_TIMES = 2
 
 
 GEN_PSUEDO_LABELS = False
-TRAIN_WITH_PSUEDO_LABELS = True
+TRAIN_WITH_PSUEDO_LABELS = False
 
 #!pip install tokenizers
 #!pip install transformers
